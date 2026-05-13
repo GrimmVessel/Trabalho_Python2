@@ -1,0 +1,108 @@
+ativos = [
+    {"nome": "SRV-WEB01", "tipo": "servidor", "ip": "192.168.1.10", "status": "ativo"},
+    {"nome": "PC-RH03", "tipo": "estacao", "ip": "192.168.1.45", "status": "ativo"},
+    {"nome": "SW-CORE01", "tipo": "switch", "ip": "192.168.1.1", "status": "inativo"},
+]
+ 
+# [1] Cadastrar ativo, [2] Listar ativos, [3] Buscar por IP, [4] Alterar status, [5] Remover ativo, [6] Sair
+def menu():
+ 
+    print("Digite a opção desejada:")
+    print("[1] Cadastrar ativo")
+    print("[2] Listar ativos")
+    print("[3] Buscar por IP")
+    print("[4] Alterar status")
+    print("[5] Remover ativo")
+    print("[6] Sair")
+      
+ 
+    opcao = input("Digite a opção desejada: ")
+    return opcao
+
+ 
+def main():
+    while True:
+        opcao = menu()
+ 
+        try: 
+            if opcao == "1":
+                nome = input("Digite o nome do ativo: ")
+                tipo = input("Digite o tipo do ativo: ")
+                ip = input("Digite o IP do ativo: ")
+                status = input("Digite o status do ativo: ")
+ 
+                validador_tipo_ativo(tipo)
+ 
+                dados = {
+                    "nome": nome,
+                    "tipo": tipo,
+                    "ip": ip,
+                    "status": status
+                }
+ 
+                ativos.append(dados)
+                print("Ativo cadastrado com sucesso!")
+ 
+            elif opcao == "2":
+                for ativo in ativos:
+                    print(f"Nome: {ativo['nome']}, Tipo: {ativo['tipo']}, IP: {ativo['ip']}, Status: {ativo['status']}")
+ 
+       
+            elif opcao == "3":
+               ip= input("insira o valor do Ip procurado:")
+               ativo= buscar_ip(ip)
+               if ativo:
+                   print (ativo)
+               else:
+                   print ("Ativo não encontrado")
+            elif opcao == "4":
+                ip = input("Digite o IP: ")
+                novo_status = input("Novo status: ")
+                alterar_status(ip, novo_status)
+             
+            elif opcao == "5":
+                ip = input("Digite o IP: ")
+                excluir(ip)
+
+            elif opcao == "6":
+                print("Saindo...")
+                break
+            
+        except Exception as e:
+            print(f"Erro: {e}")
+
+
+          
+ 
+ 
+def validador_tipo_ativo(tipo):
+    tipos_validos = ["servidor", "estacao", "switch", "roteador"]
+    if tipo not in tipos_validos:
+        raise ValueError("Tipo de ativo inválido! Tipos válidos: servidor, estacao, switch, roteador")
+def buscar_ip(ip):
+
+    for ativo in ativos:
+        if ativo["ip"] == ip:
+            return ativo
+    return None
+#Alterar status
+def alterar_status(novo_status,ip):
+    ativo = buscar_ip(ip)
+    if ativo:
+       ativo ["status"] =novo_status
+       return "Seu status foi atualizado"
+        
+
+    else:
+        return"IP não encontrado!"
+    
+def excluir(ip):
+    for ativo in ativos:
+        if ativo["ip"] == ip:
+            ativos.remove(ativo)
+            print("Ativo removido com sucesso!")
+            return
+    print("IP não encontrado!")
+main()
+ 
+
